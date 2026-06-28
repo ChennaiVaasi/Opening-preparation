@@ -4,7 +4,7 @@ const { spawnSync } = require("child_process");
 
 function usage() {
   console.log(
-    "Usage: node batch_opening_pipeline.js <target.pgn> <reference.pgn> <outdir> [--mode unified|db-only|narrow] [--from N] [--to N] [--depth N] [--narrow-plies N] [--force]"
+    "Usage: node batch_opening_pipeline.js <target.pgn> <reference.pgn> <outdir> [--mode unified] [--from N] [--to N] [--depth N] [--force]"
   );
 }
 
@@ -62,13 +62,10 @@ if (!targetPath || !referencePath || !outDir) {
 
 const mode = getArg("--mode", "unified");
 const depth = Number(getArg("--depth", "12"));
-const narrowPlies = Number(getArg("--narrow-plies", "4"));
 const force = hasFlag("--force");
 
 const scriptByMode = {
   unified: "unified_opening_generator.js",
-  "db-only": "db_only_opening_generator.js",
-  narrow: "narrow_reference_generator.js",
 };
 
 if (!scriptByMode[mode]) {
@@ -116,9 +113,7 @@ for (let gameNumber = from; gameNumber <= to; gameNumber += 1) {
   }
 
   const scriptPath = path.join(path.dirname(targetPath), scriptByMode[mode]);
-  const args = [scriptPath, targetPath, referencePath, String(gameNumber), outputPath];
-  if (mode === "unified") args.push(String(depth));
-  if (mode === "narrow") args.push(String(narrowPlies));
+  const args = [scriptPath, targetPath, referencePath, String(gameNumber), outputPath, String(depth)];
 
   const started = Date.now();
   const result = spawnSync(process.execPath, args, {
