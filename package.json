@@ -1,0 +1,14 @@
+{
+  "name": "opening-preparation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PGN opening preparation generators powered by a reference database and local Stockfish.",
+  "scripts": {
+    "generate": "node unified_opening_generator.js",
+    "batch": "node batch_opening_pipeline.js"
+  },
+  "dependencies": {
+    "chess.js": "^1.4.0",
+    "stockfish": "^18.0.7"
+  }
+}
